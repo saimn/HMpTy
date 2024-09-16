@@ -359,13 +359,13 @@ void NumpyVector<T>::init(PyObject* obj)  throw (const char *)
         // If it is the right type, then just check it is not byteswapped
         // we will have to decref tmp if a copy is made.
 
-        if (1 < PyArray_NDIM(obj)) {
+        if (1 < PyArray_NDIM((PyArrayObject*)obj)) {
             throw "Input array dimensions must be <= 1";
         }
 
-        PyArray_Descr* descr = PyArray_DESCR(obj);
+        PyArray_Descr* descr = PyArray_DESCR((PyArrayObject*)obj);
 
-        if (descr->type_num == mTypeNum && PyArray_ISNOTSWAPPED(obj)) {
+        if (descr->type_num == mTypeNum && PyArray_ISNOTSWAPPED((PyArrayObject*)obj)) {
             // We are set!  Just copy the reference.
             mArray = obj;
             Py_INCREF(obj);
@@ -417,15 +417,15 @@ void NumpyVector<T>::init(PyObject* obj)  throw (const char *)
     }
 
     // set the size
-    mSize = PyArray_SIZE(mArray);
+    mSize = PyArray_SIZE((PyArrayObject*)mArray);
 
     // dimensions and stride
-    mNdim = PyArray_NDIM(mArray);
+    mNdim = PyArray_NDIM((PyArrayObject*)mArray);
     if (mNdim == 0) {
         mStride = 0;
     }
     else {
-        mStride = PyArray_STRIDE(mArray, 0);
+        mStride = PyArray_STRIDE((PyArrayObject*)mArray, 0);
     }
 
 }
@@ -454,10 +454,10 @@ void NumpyVector<T>::init(npy_intp size)  throw (const char *)
         throw "Could not allocate array";
     }
 
-    mSize = PyArray_SIZE(mArray);
+    mSize = PyArray_SIZE((PyArrayObject*)mArray);
     // dimensions and stride
     mNdim = ndim;
-    mStride = PyArray_STRIDE(mArray, 0);
+    mStride = PyArray_STRIDE((PyArrayObject*)mArray, 0);
 
 }
 
